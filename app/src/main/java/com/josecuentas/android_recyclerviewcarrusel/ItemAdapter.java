@@ -23,6 +23,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         DiscreteScrollView.OnItemChangedListener<ItemAdapter.ItemViewHolder>,
         DiscreteScrollView.ScrollStateChangeListener<ItemAdapter.ItemViewHolder> {
 
+    public static final int TRANSITION_TIME_MILLIS = 150;
+
     private RecyclerView mRecyclerView;
     private DiscreteScrollView mDiscreteScrollView;
     private Context mContext;
@@ -38,7 +40,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         mDiscreteScrollView = (DiscreteScrollView) mRecyclerView;
         mDiscreteScrollView.addOnItemChangedListener(this);
         mDiscreteScrollView.addScrollStateChangeListener(this);
-        mDiscreteScrollView.setItemTransitionTimeMillis(150);
+        mDiscreteScrollView.setItemTransitionTimeMillis(TRANSITION_TIME_MILLIS);
         mDiscreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
                 .setMinScale(0.8f)
                 .build());
