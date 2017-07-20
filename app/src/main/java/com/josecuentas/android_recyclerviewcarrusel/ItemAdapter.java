@@ -8,10 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
 import com.squareup.picasso.Picasso;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
-
+import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     private DiscreteScrollView mDiscreteScrollView;
     private Context mContext;
     private List<Item> mItemList;
-    private OnListener mOnListener;
 
     public ItemAdapter() {
         mItemList = new ArrayList<>();
@@ -40,11 +38,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         mDiscreteScrollView = (DiscreteScrollView) mRecyclerView;
         mDiscreteScrollView.addOnItemChangedListener(this);
         mDiscreteScrollView.addScrollStateChangeListener(this);
+        mDiscreteScrollView.setItemTransitionTimeMillis(150);
+        mDiscreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
+                .setMinScale(0.8f)
+                .build());
         mContext = recyclerView.getContext();
-    }
-
-    public void setOnListener(OnListener onListener) {
-        mOnListener = onListener;
     }
 
     public void setItemList(List<Item> itemList) {
@@ -58,7 +56,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     @Override public void onBindViewHolder(ItemViewHolder holder, int position) {
-        Item item = mItemList.get(position);
+        final Item item = mItemList.get(position);
         holder.setValue(item);
         holder.populate();
     }
@@ -76,11 +74,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
     }
 
     @Override public void onScrollEnd(@NonNull ItemViewHolder currentItemHolder, int adapterPosition) {
-
     }
 
     @Override public void onScroll(float scrollPosition, @NonNull ItemViewHolder currentHolder, @NonNull ItemViewHolder newCurrent) {
-
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder  implements
@@ -97,7 +93,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
         @Override public void onClick(View view) {
             mRecyclerView.smoothScrollToPosition(getAdapterPosition());
-            vieLine.setVisibility(View.VISIBLE);
 
         }
 
@@ -111,14 +106,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         }
 
         public void showLine() {
-            mItem.check();
-            if (mItem.isCheck) vieLine.setVisibility(View.VISIBLE);
+            vieLine.setVisibility(View.VISIBLE);
             Picasso.with(mContext).load(mItem.urlHolder).into(iviIcon);
         }
 
         public void hideLine() {
-            mItem.unCheck();
-            if (!mItem.isCheck) vieLine.setVisibility(View.GONE);
+            vieLine.setVisibility(View.GONE);
             Picasso.with(mContext).load(mItem.url).into(iviIcon);
         }
 
@@ -129,9 +122,5 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         private void populate() {
             Picasso.with(mContext).load(mItem.url).into(iviIcon);
         }
-    }
-
-    interface OnListener {
-        void onItemClick(View view);
     }
 }
